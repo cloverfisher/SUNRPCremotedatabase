@@ -25,13 +25,13 @@ remotedbproc_1(remotedb_in *argp, CLIENT *clnt)
 }
 
 remotedb_out *
-add_to_database_1(remotedb_in *argp, CLIENT *clnt)
+add_to_database_1(remotedb_in2 *argp, CLIENT *clnt)
 {
 	static remotedb_out clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
 	if (clnt_call (clnt, ADD_TO_DATABASE,
-		(xdrproc_t) xdr_remotedb_in, (caddr_t) argp,
+		(xdrproc_t) xdr_remotedb_in2, (caddr_t) argp,
 		(xdrproc_t) xdr_remotedb_out, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);

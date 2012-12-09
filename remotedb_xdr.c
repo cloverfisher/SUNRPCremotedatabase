@@ -24,3 +24,15 @@ xdr_remotedb_out (XDR *xdrs, remotedb_out *objp)
 		 return FALSE;
 	return TRUE;
 }
+
+bool_t
+xdr_remotedb_in2 (XDR *xdrs, remotedb_in2 *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_string (xdrs, &objp->arg1, 128))
+		 return FALSE;
+	 if (!xdr_string (xdrs, &objp->arg2, 128))
+		 return FALSE;
+	return TRUE;
+}

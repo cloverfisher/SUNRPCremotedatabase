@@ -9,11 +9,128 @@
 	// 		u_long vers,
 	// 		char *proto);
 
-int
-main(/*int argc, char **argv*/)
+char * left(char *dst,char *src, int n)
+{
+    char *p = src;
+    char *q = dst;
+    int len = strlen(src);
+  //      printf("src %s\n",src);
+   // printf("dst %s\n",dst);
+
+  //      printf("%d",n);
+    if(n>len) 
+    	n = len;
+    /*p += (len-n);*/   /*从右边第n个字符开始*/
+    int i = 0;
+    while(n--) 
+    	*(q++) = *(p++);
+    *(q++)='\0'; /*有必要吗？很有必要*/
+
+ //   printf("src %s\n",src);
+ //       printf("dst %s\n",dst);
+    return dst;
+}
+
+	char *forma(char * buf)
+	{
+		int i;
+		char *buff = strdup(buf);
+		while(buff[0] == ' ')
+		{
+			//	printf("aaa\n");			
+				//memcpy(buff,buff,strlen(buff)-1); 
+			for(i=0;i<strlen(buff)-1;i++)
+			{
+				buff[i]=buff[i+1];
+			}
+			buff[i] = '\0';
+		//		printf("%d",strlen(buff));
+				//	printf("%s\n",buff);
+		}
+		return buff;
+	}
+
+	char * split(char * buf)
+	{
+		int i;
+		char *space;
+		char apre[30] = "";
+		char *buff;
+	//	printf("split\n");
+	//	printf("buf %s\n",buf);
+	//	printf("%d\n",strlen(buff));
+		//memset(buff,0,40);
+	//	printf("%d\n",strlen(buf));
+		//memcpy(buff,buf,strlen(buf));
+		buff = strdup(buf);
+	//	strcpy(buff,buf);
+	//	printf("buff %s\n",buff);
+		if(space = strchr(buff,' '))
+		{
+			while((strlen(buff)-strlen(space))==0)
+			{
+							
+				//memcpy(buff,buff,strlen(buff)-1); 
+				for(i=0;i<strlen(buff)-1;i++)
+				{
+					buff[i]=buff[i+1];
+				}
+				buff[i] = '\0';
+		//		printf("%d",strlen(buff));
+				space = strchr(buff,' ');
+				//	printf("%s\n",buff);
+			}
+	//		printf("%d\n",strlen(buff)-strlen(space));
+	//		printf("%s\n",space);
+			left(apre,buff,strlen(buff)-strlen(space));
+			memset(buf,0,strlen(buf));
+			memcpy(buf,apre,strlen(apre));
+	//		memcpy(buf,)
+			printf("buff   %s \n",buff);
+			//buff = apre;
+			//buff = pre;
+			//printf("%s\n",space);
+			//memset(pre,0,strlen(pre));
+			//memcpy(pre,buff,strlen(buff)-strlen(space));
+			printf("aaa%s\n",apre);
+			//memset(buff,0,strlen(buff));
+	//		printf("aaa  %s\n",buff);
+	//		printf("aaa  %s\n",space);
+	//		printf("aaa  %s\n",apre);
+			//memcpy(buff,pre,strlen(buff));
+			//printf("aaa%s\n",buff);
+			if(space)
+			{
+				return space;
+
+			}
+			else 
+				return NULL;
+		}
+		else
+			return NULL;
+	}
+void failevent()
+{
+	printf("rpc fail, maybe the server is not open\n");
+	exit(0);
+}
+void help()
+{
+			printf("****************************************************\n");
+	printf("add <phonenumber> <name> | add the name and number\n");
+	printf("delete <name> | delete the name and number\n");
+	printf("query <str>   | look up the people whose name is start at str\n");
+	printf("list          | appear the list of name/number\n");
+	printf("quit          | quit\n");
+	printf("help		  | help\n");
+			printf("****************************************************\n");
+}
+int main(int argc, char **argv)
 {
 	CLIENT		*cl;
 	remotedb_in	in;
+	remotedb_in2 in2;
 	remotedb_out	*outp;
 	char c;
 	int i;
@@ -23,6 +140,11 @@ main(/*int argc, char **argv*/)
 	char *deletestr = "delete";
 	char *querystr = "query";
 	char *liststr = "list";
+	char *space;
+	char *flag;
+	int length;
+	char *namestr;
+	char *numstr;
 //	XDR *xhandle;
 
 
@@ -31,39 +153,123 @@ main(/*int argc, char **argv*/)
 	// 	err_quit("usage: client <hostname> <integer-value>");
 
 	cl = clnt_create("0.0.0.0", REMOTEDB_PROG, REMOTEDB_VERS, "tcp");
+	//printf("test\n");
+	in.arg1 = argv[1];
+	if((outp = remotedbproc_1(&in, cl))==NULL)
+		failevent();
+			printf("****************************************************\n");
+	printf("%s",outp->res1);
+			printf("****************************************************\n");
+	if(strcmp(outp->res1,"rpc not authrize\n")==0)
+		exit(0);
+	help();
+	while(1)
+	{
 	fflush(stdin);
 	gets(buff);
-	printf("%s",buff);
-	in.arg1 = buff;
+//	in.arg1 = buff;
 
-	printf("%s\n",in.arg1);
-//	getline(&in.arg1); 
-	//in.arg1 = argv[2];
-	//in.arg1 = 3;
-//	gets(in.arg1);
-	if ( (outp = remotedbproc_1(&in, cl)) == NULL)
-		;//err_quit("%s", clnt_sperror(cl, argv[1]));
 
-	printf("result: %s\n", outp->res1);
 
-		if ( (outp = add_to_database_1(&in, cl)) == NULL)
-		;//err_quit("%s", clnt_sperror(cl, argv[1]));
+	// if ( (outp = remotedbproc_1(&in, cl)) == NULL)
+	// 	;//err_quit("%s", clnt_sperror(cl, argv[1]));
 
-	printf("result: %s\n", outp->res1);
+	// printf("result: %s\n", outp->res1);
 
-		if ( (outp = remove_from_database_1(&in, cl)) == NULL)
-		;//err_quit("%s", clnt_sperror(cl, argv[1]));
+	if(space = split(buff))
+	{
+	//	memset(flag,0,strlen(flag));
+		//	memcpy(flag,buff,strlen(buff)-strlen(space));
+		//	printf("%d\n",strlen(buff)-strlen(space) );
+		flag = buff;
+	//		printf("%s\n",space);
+	//		printf("%s\n",flag);
+//			printf("%s\n",in.arg1);
+			if(strcmp(flag,"add")==0)
+			{
+	//			printf("hehehe\n");
+				if(namestr = split(space))
+				{
+				//	memset(numstr,0,strlen(numstr));
+				//		memcpy(numstr,space,strlen(space)-strlen(namestr));
+					space = forma(space);
+					namestr = forma(namestr);
+					// strcat(space,"\n");
+					// strcat(namestr,"\n");
+			//		printf("aaaaaaa\n");
+			//		printf("space %s\n",space);
+			//		printf("namestr %s\n",namestr);
+					in2.arg1 = space;
+					in2.arg2 = namestr;
+					if ( (outp = add_to_database_1(&in2, cl)) == NULL)
+	 	failevent();//err_quit("%s", clnt_sperror(cl, argv[1]));
 
-	printf("result: %s\n", outp->res1);
+			printf("****************************************************\n");
+					printf(" %s\n", outp->res1);
+			printf("****************************************************\n");
+				}
 
-		if ( (outp = lookup_name_1(&in, cl)) == NULL)
-		;//err_quit("%s", clnt_sperror(cl, argv[1]));
 
-	printf("result: %s\n", outp->res1);
 
-		if ( (outp = list_1(&in, cl)) == NULL)
-		;//err_quit("%s", clnt_sperror(cl, argv[1]));
+		//		if ( (outp = add_to_database_1(&in, cl)) == NULL)
+		//;//err_quit("%s", clnt_sperror(cl, argv[1]));
 
-	printf("result: %s\n", outp->res1);
-	exit(0);
+			//	printf("result: %s\n", outp->res1);
+			}
+			if(strcmp(flag,"delete")==0)
+			{
+				space = forma(space);
+				in.arg1 = space;
+				if ( (outp = remove_from_database_1(&in, cl)) == NULL)
+		failevent();//err_quit("%s", clnt_sperror(cl, argv[1]));
+			printf("****************************************************\n");
+
+				printf(" %s\n", outp->res1);
+			printf("****************************************************\n");
+			}
+			if(strcmp(flag,"query")==0)
+			{	
+				space = forma(space);
+				in.arg1 = space;
+				if ( (outp = lookup_name_1(&in, cl)) == NULL)
+				failevent();//err_quit("%s", clnt_sperror(cl, argv[1]));
+			printf("****************************************************\n");
+
+				printf(" %s\n", outp->res1);			
+			printf("****************************************************\n");
+			}
+	}
+	else
+	{
+		if(strcmp(buff,"list")==0)
+		{
+			printf("****************************************************\n");
+				if ( (outp = list_1(&in, cl)) == NULL)
+					failevent();//err_quit("%s", clnt_sperror(cl, argv[1]));
+
+				printf(" %s\n", outp->res1);	
+			printf("****************************************************\n");
+
+		}
+		if(strcmp(buff,"quit")==0)
+		{
+				//if ( (outp = list_1(&in, cl)) == NULL)
+					failevent();//err_quit("%s", clnt_sperror(cl, argv[1]));
+
+				//printf("result: %s\n", outp->res1);	
+					exit(0);
+		}
+		if(strcmp(buff,"help")==0)
+		{
+			help();
+		}
+	}
+
+
+	
+	}
+
+exit(0);
 }
+
+

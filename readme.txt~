@@ -1,0 +1,6 @@
+Sunrpc interface to implement a remote telephone book.
+
+"$./server" to start the server
+"$./remoted i5"   to get start the client.
+">help" can get help
+

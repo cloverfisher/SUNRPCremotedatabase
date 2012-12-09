@@ -21,7 +21,7 @@ remotedb_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
 		remotedb_in remotedbproc_1_arg;
-		remotedb_in add_to_database_1_arg;
+		remotedb_in2 add_to_database_1_arg;
 		remotedb_in remove_from_database_1_arg;
 		remotedb_in lookup_name_1_arg;
 		remotedb_in list_1_arg;
@@ -42,7 +42,7 @@ remotedb_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		break;
 
 	case ADD_TO_DATABASE:
-		_xdr_argument = (xdrproc_t) xdr_remotedb_in;
+		_xdr_argument = (xdrproc_t) xdr_remotedb_in2;
 		_xdr_result = (xdrproc_t) xdr_remotedb_out;
 		local = (char *(*)(char *, struct svc_req *)) add_to_database_1_svc;
 		break;

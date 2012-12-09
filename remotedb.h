@@ -24,6 +24,12 @@ struct remotedb_out {
 };
 typedef struct remotedb_out remotedb_out;
 
+struct remotedb_in2 {
+	char *arg1;
+	char *arg2;
+};
+typedef struct remotedb_in2 remotedb_in2;
+
 #define REMOTEDB_PROG 0x31230000
 #define REMOTEDB_VERS 1
 
@@ -32,8 +38,8 @@ typedef struct remotedb_out remotedb_out;
 extern  remotedb_out * remotedbproc_1(remotedb_in *, CLIENT *);
 extern  remotedb_out * remotedbproc_1_svc(remotedb_in *, struct svc_req *);
 #define ADD_TO_DATABASE 2
-extern  remotedb_out * add_to_database_1(remotedb_in *, CLIENT *);
-extern  remotedb_out * add_to_database_1_svc(remotedb_in *, struct svc_req *);
+extern  remotedb_out * add_to_database_1(remotedb_in2 *, CLIENT *);
+extern  remotedb_out * add_to_database_1_svc(remotedb_in2 *, struct svc_req *);
 #define REMOVE_FROM_DATABASE 3
 extern  remotedb_out * remove_from_database_1(remotedb_in *, CLIENT *);
 extern  remotedb_out * remove_from_database_1_svc(remotedb_in *, struct svc_req *);
@@ -69,10 +75,12 @@ extern int remotedb_prog_1_freeresult ();
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_remotedb_in (XDR *, remotedb_in*);
 extern  bool_t xdr_remotedb_out (XDR *, remotedb_out*);
+extern  bool_t xdr_remotedb_in2 (XDR *, remotedb_in2*);
 
 #else /* K&R C */
 extern bool_t xdr_remotedb_in ();
 extern bool_t xdr_remotedb_out ();
+extern bool_t xdr_remotedb_in2 ();
 
 #endif /* K&R C */
 
